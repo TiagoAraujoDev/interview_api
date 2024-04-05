@@ -17,35 +17,21 @@ const tokens = [];
 
 const authController = (req: Request, res: Response) => {
     const { name, password } = req.body;
-    const _user = users.find(user => {
-        console.log('name:', name)
-        console.log('userName:', user.name)
-        return user.name === name
-    })
-    if (!_user) {
-        console.log("Nome não encontrado!")
-    }
-    const user = users.find(user => {
-        console.log('password:', password)
-        console.log('userPassword:', user.password)
-
-        return user.name == _user?.name && user.password == password
-    })
-
+    const user = users.find(user => user.name === name)
     if (!user) {
-        console.log("Senha errada")
-    } else {
-        const token = sign({}, "secret", {
-            subject: user.name,
-            expiresIn: 60,
-        });
-        tokens.push(token);
-        return res.json(token);
-        
+        return res.status(401).json({ message: "Nome não encontrado!"});
     }
-    console.log('teste');
+    if (user.password == password) {
+        return res.status(401).json({ message: "Senha errada"});
+    }
+    const token = sign({}, "secret", {
+        subject: user.name,
+        expiresIn: 60,
+    });
 
-    return res.end();
+    tokens.push(token);
+
+    return res.status(200).json({ token });
 }
 
 export { authController };
