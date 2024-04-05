@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #121214;
+    color: white;
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px;
+    background-color: #6b6b6b;
+}
+
+header > .logo {
+    font-weight: 900;
+    font-size: larger;
+    color: #ADADAD;
+}
+
+.form_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+form {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    width:fit-content;
+    gap: 10px;
+    background-color: #6b6b6b;
+    padding: 10px;
+    border-radius: 8px;
+}
