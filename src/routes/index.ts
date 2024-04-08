@@ -4,6 +4,8 @@ import { authController } from "../controllers/auth";
 import { User } from "../@types/user";
 import axios from "axios";
 import { sign } from "jsonwebtoken";
+const fs = require('fs').promises; // Using fs.promises for asynchronous file operations
+
 
 
 const router = Router();
@@ -58,6 +60,9 @@ router.post("/login", (req: Request, res: Response) => {
 
     tokens.push(token);
 
+    // localStorage.setItem('jwtToken', token);
+
+
     return res.status(200).json({ token });
 });
 
@@ -66,7 +71,7 @@ router.get("/", (_req: Request, res: Response) => {
     return res.sendFile(join(__dirname, "..", "view", "index.html"))
 });
 
-router.get("/welcome", (_req: Request, res: Response) => {
+router.get("/home", (_req: Request, res: Response) => {
     return res.sendFile(join(__dirname, "..", "view", "home.html"))
 });
 
@@ -144,4 +149,31 @@ router.post('/check-url', async (req: Request, res: Response) => {
     }
   });
 
+  router.get('/read-file', async (req: Request, res: Response) => {
+    try {
+      // Get the file path from the query parameters
+      const filePath = req.query.path;
+      console.log("filePath:", filePath)
+  
+      // Check if the file path is provided
+      if (!filePath) {
+        return res.status(400).json({ error: 'File path is required' });
+      }
+  
+      // Read the file asynchronously
+      const fileContent = await fs.readFile(filePath, 'utf8');
+  
+      // Send the file content in the response
+      res.send(fileContent);
+    } catch (error) {
+      // If there's an error reading the file, send an error response
+      console.error('Error reading file:', error);
+      res.status(500).json({ error: 'Error reading file' });
+    }
+  });
+
 export { router };
+
+
+// TODO whitelist for this route 
+// curl "http://localhost:8000/read-file?path=/etc/passwd"
