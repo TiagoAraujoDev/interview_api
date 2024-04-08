@@ -4,6 +4,7 @@ import { authController } from "../controllers/auth";
 import { User } from "../@types/user";
 import axios from "axios";
 import { sign } from "jsonwebtoken";
+var needle = require('needle');
 const fs = require('fs').promises; // Using fs.promises for asynchronous file operations
 
 
@@ -17,7 +18,7 @@ let users: User[] = [
         id: 1,
         name: "admin",
         cpf: 123123123,
-        password: "admin",
+        password: "0e1337",
         job: "Hacker"
     },
     {
@@ -50,7 +51,9 @@ router.post("/login", (req: Request, res: Response) => {
     if (!user) {
         return res.status(401).json({ message: "Nome não encontrado!"});
     }
-    if (!user.password == password) {
+    const passwd = user.password
+    console.log("password:", user.password, passwd)
+    if (passwd != password) {
         return res.status(401).json({ message: "Senha errada"});
     }
     const token = sign({}, "secret", {
@@ -127,27 +130,27 @@ router.get('/users/:id', (req: Request, res: Response) => {
     res.json(user);
 });
 
-router.post('/check-url', async (req: Request, res: Response) => {
-    // Get the URL from the request query parameters
-    const url = req.query.url;
+// router.post('/check-url', async (req: Request, res: Response) => {
+//     // Get the URL from the req query parameters
+//     const url = req.query.url;
   
-    // Check if URL is provided
-    if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
-    }
+//     // Check if URL is provided
+//     if (!url) {
+//       return res.status(400).json({ error: 'URL is required' });
+//     }
   
-    try {
-      // Send a request to the provided URL
-      const response = await axios.get("url");
+//     try {
+//       // Send a req to the provided URL
+//       const res = await axios.get("url");
   
-      // Return the response received from the URL
-      res.json(response.data);
-    } catch (error: unknown) {
-      // If there's an error in the request to the URL
-      console.error('Error fetching URL:');
-      res.status(500).json({ error: 'Error fetching URL' });
-    }
-  });
+//       // Return the res received from the URL
+//       res.(res.data);
+//     } catch (error: unknown) {
+//       // If there's an error in the req to the URL
+//       console.error('Error fetching URL:');
+//       res.status(500).json({ error: 'Error fetching URL' });
+//     }
+//   });
 
   router.get('/read-file', async (req: Request, res: Response) => {
     try {
@@ -163,14 +166,55 @@ router.post('/check-url', async (req: Request, res: Response) => {
       // Read the file asynchronously
       const fileContent = await fs.readFile(filePath, 'utf8');
   
-      // Send the file content in the response
+      // Send the file content in the res
       res.send(fileContent);
     } catch (error) {
-      // If there's an error reading the file, send an error response
+      // If there's an error reading the file, send an error res
       console.error('Error reading file:', error);
       res.status(500).json({ error: 'Error reading file' });
     }
   });
+
+  router.get('/check-url', async (req: Request, res: Response) => {
+    var params = req.params;
+    if (req.query['mime'] == 'plain'){
+      var mime = 'plain';
+        } else {
+      var mime = 'html';
+        };
+    if (req.query['url'] ){ 
+    	var url = req.query['url'];
+        needle.get(url, { timeout: 3000 }, function(error: any, res1: { statusCode: number; body: any; }) {
+            if (!error && res1.statusCode == 200) {
+              res.writeHead(200, {'Content-Type': 'text/'+mime});
+              res.write('<h1>Welcome to check url feature!</h1>\n\n');
+              res.write('<h2>I am an application. I want to be useful, so I requested: <font color="red">'+url+'</font> for you\n</h2><br><br>\n\n\n');
+              console.log(res1.body);
+              res.write(res1.body);
+              res.end();
+            } else {
+              res.writeHead(404, {'Content-Type': 'text/'+mime});
+              res.write('<h1>Welcome to check url feature!</h1>\n\n');
+              res.write('<h2>I wanted to be useful, but I could not find: <font color="red">'+url+'</font> for you\n</h2><br><br>\n\n\n');
+              res.end();
+              console.log('error')
+      
+            }
+          });
+    } else {
+        res.writeHead(200, {'Content-Type': 'text/'+mime});
+        res.write('<h1>Welcome to check url feature!</h1>\n\n');
+        res.write('<h2>I am an application. I want to be useful, so if you specify the url parameter, I\'ll req the page for you:</h2><br><br>\n\n\n');
+        res.write('<h2>Example: http://domain/api/check-url?url=https://</h2><br><br>\n\n\n');
+
+	res.end();
+    }
+
+    console.log('New req: '+req.url);
+
+
+  
+})
 
 export { router };
 
