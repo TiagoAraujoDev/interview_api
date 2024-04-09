@@ -1,43 +1,41 @@
-* {
-    margin: 0;
-    box-sizing: border-box;
-}
-
 body {
-    background-color: #121214;
-    color: white;
+    background-color: #333; /* Dark background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 30px;
-    background-color: #6b6b6b;
-}
-
-header > .logo {
-    font-weight: 900;
-    font-size: larger;
-    color: #ADADAD;
-}
-
-.form_container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-form {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-    width:fit-content;
-    gap: 10px;
-    background-color: #6b6b6b;
+    margin: 0;
+  }
+  
+  .login-container {
+    background-color: #222; /* Darker background color for the form */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .login-form {
+    color: #0a0; /* Green text color */
+  }
+  
+  .login-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .login-form input[type="text"],
+  .login-form input[type="password"],
+  .login-form input[type="submit"] {
+    width: 100%;
     padding: 10px;
-    border-radius: 8px;
-}
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .login-form input[type="submit"] {
+    background-color: #0a0; /* Green button background color */
+    color: white;
+    cursor: pointer;
+  }
+  

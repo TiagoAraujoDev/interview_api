@@ -4,14 +4,14 @@ import { User } from "../@types/user";
 
 const users: User[] = [];
 
-const admin: User = {
-    name: "admin",
-    password: "admin",
-    cpf: 32165498765,
-    job: "dev"
-};
+// const admin: User = {
+//     name: "admin",
+//     password: "admin",
+//     cpf: 32165498765,
+//     job: "dev"
+// };
 
-users.push(admin);
+// users.push(admin);
 
 const tokens = [];
 
